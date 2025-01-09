@@ -6,7 +6,6 @@ Bu proje, 500x500 birimlik bir alanda yaşayan çeşitli hayvan türlerinin davr
 
 ---
 
-
 ## Kullanılan Teknolojiler ve Yapılar
 
 ### 1. **Teknolojiler**
@@ -28,7 +27,6 @@ Bu proje, 500x500 birimlik bir alanda yaşayan çeşitli hayvan türlerinin davr
      - **Hayvan Listesi:** O(n), burada n hayvan sayısıdır.
 
 ---
-
 
 ## Nasıl Çalıştırılır?
 
@@ -54,7 +52,6 @@ Bu proje, 500x500 birimlik bir alanda yaşayan çeşitli hayvan türlerinin davr
    - Simülasyon tamamlandığında, konsolda her hayvan türünün kalan sayısı görüntülenecektir.
 
 ---
-
 
 ## Proje Yapısı
 
@@ -125,7 +122,6 @@ Proje, aşağıdaki ana bileşenlerden oluşmaktadır:
    - 1000 adım sonunda, her hayvan türünün kalan sayısı konsola yazdırılır.
 
 ---
-
 
 ## Örnek İşleyiş
 
