@@ -1,5 +1,6 @@
-// hayvanların avlanma işlemlerini yönetir.
-// etçil hayvanlar ve avcı, diğer hayvanları avlar.
+// avlanma yöneticisi, hayvanların avlanma işlemlerini yönetir.
+
+using HayvanatBahcesiSimulasyonu.Enums;
 
 namespace HayvanatBahcesiSimulasyonu.Models
 {
@@ -20,8 +21,16 @@ namespace HayvanatBahcesiSimulasyonu.Models
                         var avlanan = etcil.Avla(_hayvanYoneticisi.Grid);
                         if (avlanan != null)
                         {
-                            _hayvanYoneticisi.HayvanSil(avlanan); // avlanan hayvanı sil
-                            Console.WriteLine($"[adım {adim}] {etcil.Tur}, {avlanan.Tur} avladı.");
+                            string avlananTur = avlanan.Tur;
+                            if (
+                                avlanan.Tur == HayvanTuru.Tavuk.ToString()
+                                && avlanan.Cinsiyet == Cinsiyet.Erkek
+                            )
+                            {
+                                avlananTur = "Horoz";
+                            }
+                            _hayvanYoneticisi.HayvanSil(avlanan);
+                            Console.WriteLine($"[adım {adim}] {etcil.Tur}, {avlananTur} avladı.");
                         }
                     }
                     else if (hayvan is IAvci avci)
@@ -29,8 +38,16 @@ namespace HayvanatBahcesiSimulasyonu.Models
                         var avlanan = avci.Avla(_hayvanYoneticisi.Grid);
                         if (avlanan != null)
                         {
-                            _hayvanYoneticisi.HayvanSil(avlanan); // avlanan hayvanı sil
-                            Console.WriteLine($"[adım {adim}] avcı, {avlanan.Tur} avladı.");
+                            string avlananTur = avlanan.Tur;
+                            if (
+                                avlanan.Tur == HayvanTuru.Tavuk.ToString()
+                                && avlanan.Cinsiyet == Cinsiyet.Erkek
+                            )
+                            {
+                                avlananTur = "Horoz";
+                            }
+                            _hayvanYoneticisi.HayvanSil(avlanan);
+                            Console.WriteLine($"[adım {adim}] avcı, {avlananTur} avladı.");
                         }
                     }
                 }

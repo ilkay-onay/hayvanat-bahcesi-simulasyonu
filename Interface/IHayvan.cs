@@ -1,11 +1,12 @@
-// hayvanların interface'ini tanımlar.
-// tüm hayvan türleri bu arayüzü uygular.
+// hayvan interface'i, hayvan davranışlarını tanımlar.
+using HayvanatBahcesiSimulasyonu.Enums;
+
 namespace HayvanatBahcesiSimulasyonu.Models
 {
     public interface IHayvan
     {
         string Tur { get; }
-        string Cinsiyet { get; }
+        Cinsiyet Cinsiyet { get; }
         int X { get; }
         int Y { get; }
         int HareketMenzili { get; }

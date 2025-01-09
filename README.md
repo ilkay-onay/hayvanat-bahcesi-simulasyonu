@@ -15,13 +15,13 @@ Bu proje, 500x500 birimlik bir alanda yaşayan çeşitli hayvan türlerinin davr
 
 ### 2. **Algoritmalar ve Veri Yapıları**
    - **Grid Tabanlı Konum Yönetimi:** Hayvanların konumları, 2 boyutlu bir dizi (`IHayvan?[,]`) üzerinde yönetilir. Grid üzerinde hayvanların yakınlarını bulmak için optimize bir arama algoritması kullanılmıştır. Bu algoritma, hayvanın bulunduğu konumdan belirli bir menzil içindeki hücreleri tarar ve sadece ilgili hücreleri kontrol eder.
-   - **Paralel İşleme:** Projede, simülasyon adımlarının hızlandırılması için paralel programlama kullanılmıştır. Simülasyon adımları, `Parallel.ForEach` kullanılarak paralel şekilde işlenir. Özellikle, hayvanların hareket etmesi, avlanma ve üreme işlemleri paralel olarak işlenir. Race conditionlarını engellemek için 'lock' kullanılmıştır.
+   - **Paralel İşleme:** Projede, simülasyon adımlarının hızlandırılması için paralel programlama kullanılmıştır. Simülasyon adımları, `Parallel.ForEach` kullanılarak paralel şekilde işlenir. Özellikle, hayvanların hareket etmesi, avlanma ve üreme işlemleri paralel olarak işlenir. Race conditionlarını engellemek için `ConcurrentDictionary` gibi thread-safe yapılar kullanılmıştır.
    
 ### 3. **Kod Analizi**
    - **Zaman Karmaşıklığı (Time Complexity):**
      - **Hareket İşlemi:** O(n), burada n hayvan sayısıdır.
-     - **Avlanma İşlemi:** O(n * m), burada n etçil hayvan sayısı, m ise yakın hayvan sayısıdır.
-     - **Üreme İşlemi:** O(k^2), burada k aynı türden hayvan sayısıdır.
+     - **Avlanma İşlemi:**  Avlanma işlemi, `YakinHayvanlariGetir` metodu ile yakın hayvanları bulmayı içerir. Bu metot, en kötü durumda gridin tamamını tarayabilir, bu da O(gridBoyutu^2) zaman karmaşıklığına yol açar. Avlanma işleminin karmaşıklığı bu nedenle  **O(n \* gridBoyutu^2)**  olarak ifade edilebilir, burada n avcı hayvan sayısıdır.
+     - **Üreme İşlemi:** Üreme işlemi, olası tüm eşleşmeleri kontrol ettiğinden, en kötü durumda  **O(k^2)**  karmaşıklığına sahiptir, burada k aynı türden hayvan sayısıdır.
    - **Bellek Karmaşıklığı (Space Complexity):**
      - **Grid Yapısı:** O(gridBoyutu^2), çünkü 2 boyutlu bir dizi kullanılır.
      - **Hayvan Listesi:** O(n), burada n hayvan sayısıdır.
@@ -59,9 +59,12 @@ Proje, aşağıdaki ana bileşenlerden oluşmaktadır:
 
 ### 1. **Hayvan Sınıfları**
    - **`Hayvan` (Base Class):** Tüm hayvan türlerinin temel özelliklerini ve davranışlarını içerir. Bu sınıf, hayvanların türü, cinsiyeti, konumu ve hareket menzili gibi özellikleri tanımlar.
-   - **`Otcul`:** Otçul hayvanların özelliklerini içerir. Bu hayvanlar avlanma özelliğine sahip değildir.
-   - **`Etcil`:** Etçil hayvanların özelliklerini ve avlanma davranışlarını içerir. Kurt ve aslan gibi hayvanlar bu sınıftan türetilir.
-   - **`Avci`:** Avcının özelliklerini ve avlanma davranışlarını içerir. Avcı, diğer hayvanları avlayabilir.
+   - **`Koyun`:** Koyunların özelliklerini içerir ve `IKurtSaldırabilir`, `IAslanSaldırabilir` arayüzlerini uygular.
+   - **`Inek`:** İneklerin özelliklerini içerir ve `IAslanSaldırabilir` arayüzünü uygular.
+   -  **`Tavuk`:** Tavukların özelliklerini içerir ve `IKurtSaldırabilir` arayüzünü uygular.
+   - **`Kurt`:** Kurtların özelliklerini ve avlanma davranışlarını içerir. `IEtcil` arayüzünü uygular.
+   - **`Aslan`:** Aslanların özelliklerini ve avlanma davranışlarını içerir. `IEtcil` arayüzünü uygular.
+   - **`Avci`:** Avcının özelliklerini ve avlanma davranışlarını içerir. `IAvci` arayüzünü uygular.
 
 ### 2. **Grid Yapısı**
    - **`Grid`:** Hayvanların konumlandığı 500x500 birimlik alanı temsil eder. Bu sınıf, hayvanların eklenmesi, silinmesi ve konumlarının güncellenmesi gibi işlemleri yönetir.
@@ -76,13 +79,17 @@ Proje, aşağıdaki ana bileşenlerden oluşmaktadır:
    - **`UremeYoneticisi`:** Hayvanların üreme işlemlerini yönetir. Aynı türden farklı cinsiyetteki hayvanlar birbirine yakınlaştığında yeni bir hayvan oluşturulur.
    - **`AvlanmaYoneticisi`:** Etçil hayvanların ve avcının avlanma işlemlerini yönetir.
 
-### 5. **Arayüzler (Interfaces)**
+### 5. **Fabrika Sınıfı**
+   - **`HayvanFabrikasi`:**  `HayvanTuru` enum değerine göre uygun hayvan nesnesini oluşturur.
+
+### 6. **Arayüzler (Interfaces)**
    - **`IHayvan`:** Tüm hayvan türleri için ortak özellikleri ve davranışları tanımlar.
    - **`IEtcil`:** Etçil hayvanların avlanma davranışlarını tanımlar.
-   - **`IOtcul`:** Otçul hayvanların özelliklerini tanımlar.
-   - **`IAvci`:** Avcının avlanma davranışlarını tanımlar.
+    - **`IAvci`:** Avcının avlanma davranışlarını tanımlar.
    - **`IGrid`:** Grid yapısının işlevlerini tanımlar.
    - **`ISimulasyon`:** Simülasyonun temel işlemlerini tanımlar.
+    - **`IKurtSaldırabilir`:** Kurtların avlayabileceği hayvanların işaretlenmesi için kullanılır.
+    - **`IAslanSaldırabilir`:** Aslanların avlayabileceği hayvanların işaretlenmesi için kullanılır.
 
 ---
 
@@ -111,15 +118,15 @@ Proje, aşağıdaki ana bileşenlerden oluşmaktadır:
    - Hayvanlar, alanın dışına çıkamaz.
 
 ### 3. **Avlanma Mekanizması**
-   - **Kurt:** Kendisine 4 birim yakınındaki koyun, tavuk ve horozları avlayabilir.
-   - **Aslan:** Kendisine 5 birim yakınındaki inek ve koyunları avlayabilir.
-   - **Avcı:** Kendisine 8 birim yakınındaki herhangi bir hayvanı avlayabilir.
+    * **Kurt:** Kendisine 4 birim yakınındaki `IKurtSaldırabilir` arayüzünü implemente eden hayvanları (koyun, tavuk, horoz) avlayabilir.
+    * **Aslan:** Kendisine 5 birim yakınındaki `IAslanSaldırabilir` arayüzünü implemente eden hayvanları (inek, koyun) avlayabilir.
+    * **Avcı:** Kendisine 8 birim yakınındaki herhangi bir hayvanı avlayabilir.
 
 ### 4. **Üreme Mekanizması**
-   - Aynı türden farklı cinsiyetteki hayvanlar birbirine 3 birim yakınlaştığında, rastgele cinsiyette yeni bir hayvan oluşturulur.
+   - Aynı türden farklı cinsiyetteki hayvanlar birbirine 3.0 birim yakınlaştığında, rastgele cinsiyette yeni bir hayvan oluşturulur.
 
 ### 5. **Simülasyon Sonu**
-   - 1000 adım sonunda, her hayvan türünün kalan sayısı konsola yazdırılır.
+   - 1000 adım sonunda, her hayvan türünün kalan sayısı konsola yazdırılır. Tavuklar kendi içerisinde cinsiyetlerine göre (tavuk ve horoz) ayrılır ve yazdırılır.
 
 ---
 
@@ -150,7 +157,7 @@ Proje, aşağıdaki ana bileşenlerden oluşmaktadır:
   - Avcı: (5, 5) → (6, 5)
 
 #### **Adım 3: Avlanma**
-- **Kurt:** Kendisine 4 birim yakınındaki hayvanları kontrol eder.
+- **Kurt:** Kendisine 4 birim yakınındaki `IKurtSaldırabilir` hayvanları kontrol eder.
   - Koyun (Dişi) (5, 6) kurtun menzilinde (2, 2) değil, avlanmaz.
 - **Avcı:** Kendisine 8 birim yakınındaki hayvanları kontrol eder.
   - Koyun (Dişi) (5, 6) avcının menzilinde (6, 5). Avcı, Koyun (Dişi)'yi avlar.
@@ -167,7 +174,7 @@ Proje, aşağıdaki ana bileşenlerden oluşmaktadır:
   - Avcı: (6, 5) → (7, 5)
 
 #### **Adım 6: Avlanma**
-- **Kurt:** Kendisine 4 birim yakınındaki hayvanları kontrol eder.
+- **Kurt:** Kendisine 4 birim yakınındaki `IKurtSaldırabilir` hayvanları kontrol eder.
   - Koyun (Erkek) (4, 5) kurtun menzilinde (3, 3). Kurt, Koyun (Erkek)'i avlar.
   - **Çıktı:** `[adım 6] Kurt, Koyun avladı.`
 - **Avcı:** Yakınında avlanacak hayvan kalmadı.

@@ -1,3 +1,4 @@
+// hayvan türü enum'ı, hayvanların türlerini temsil eder.
 namespace HayvanatBahcesiSimulasyonu.Enums
 {
     public enum HayvanTuru
@@ -7,5 +8,6 @@ namespace HayvanatBahcesiSimulasyonu.Enums
         Kurt,
         Aslan,
         Tavuk,
+        Avci,
     }
 }

@@ -8,14 +8,14 @@ namespace HayvanatBahcesiSimulasyonu.Models
         private readonly ConcurrentDictionary<IHayvan, Guid> _hayvanIdleri = new();
         private readonly IGrid _grid = grid;
 
-        public IGrid Grid => _grid; // grid özelliği
+        public IGrid Grid => _grid;
 
         public void HayvanEkle(IHayvan hayvan)
         {
             var hayvanId = Guid.NewGuid();
             _hayvanlar.TryAdd(hayvanId, hayvan);
             _hayvanIdleri.TryAdd(hayvan, hayvanId);
-            _grid.HayvanEkle(hayvan); // hayvanı grid'e ekle
+            _grid.HayvanEkle(hayvan);
         }
 
         public void HayvanSil(IHayvan hayvan)
@@ -23,10 +23,10 @@ namespace HayvanatBahcesiSimulasyonu.Models
             if (_hayvanIdleri.TryRemove(hayvan, out var hayvanId))
             {
                 _hayvanlar.TryRemove(hayvanId, out _);
-                _grid.HayvanSil(hayvan); // hayvanı grid'den kaldır
+                _grid.HayvanSil(hayvan);
             }
         }
 
-        public List<IHayvan> TumHayvanlariGetir() => [.. _hayvanlar.Values]; // tüm hayvanları döndür
+        public List<IHayvan> TumHayvanlariGetir() => [.. _hayvanlar.Values];
     }
 }

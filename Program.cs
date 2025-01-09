@@ -1,25 +1,25 @@
-// grid boyutu, iterasyon sayısı ve hayvanların eklenmesi burada yapılır.
 using HayvanatBahcesiSimulasyonu.Enums;
 using HayvanatBahcesiSimulasyonu.Models;
 
-int gridBoyutu = 500; // grid boyutu (500x500)
-int iterasyonSayisi = 1000; // simülasyonun kaç adım çalışacağı
+int gridBoyutu = 500;
+int iterasyonSayisi = 1000;
 
 var simulasyon = new Simulasyon(gridBoyutu, iterasyonSayisi);
 
 // hayvanları ekle
-            simulasyon.HayvanEkle(Koyun, 15, Cinsiyet.Erkek, 2);
-            simulasyon.HayvanEkle(Koyun, 15, Cinsiyet.Disi, 2);
-            simulasyon.HayvanEkle(Inek, 5, Cinsiyet.Erkek, 2);
-            simulasyon.HayvanEkle(Inek, 5, Cinsiyet.Disi, 2);
-            simulasyon.HayvanEkle(Tavuk, 10, Cinsiyet.Disi, 1);
-            simulasyon.HayvanEkle(Tavuk, 10, Cinsiyet.Erkek, 1); //horoz
+simulasyon.HayvanEkle(HayvanTuru.Koyun, 15, Cinsiyet.Erkek);
+simulasyon.HayvanEkle(HayvanTuru.Koyun, 15, Cinsiyet.Disi);
+simulasyon.HayvanEkle(HayvanTuru.Inek, 5, Cinsiyet.Erkek);
+simulasyon.HayvanEkle(HayvanTuru.Inek, 5, Cinsiyet.Disi);
+simulasyon.HayvanEkle(HayvanTuru.Tavuk, 10, Cinsiyet.Disi);
+simulasyon.HayvanEkle(HayvanTuru.Tavuk, 10, Cinsiyet.Erkek); //horoz, erkek tavuk horozdur.
 
 // etçil hayvanları ekle
-            simulasyon.HayvanEkle(Kurt, 5, Cinsiyet.Disi, 3);
-            simulasyon.HayvanEkle(Kurt, 5, Cinsiyet.Erkek, 3);
-            simulasyon.HayvanEkle(Aslan, 4, Cinsiyet.Erkek, 4);
-            simulasyon.HayvanEkle(Aslan, 4, Cinsiyet.Disi, 4);
+simulasyon.HayvanEkle(HayvanTuru.Kurt, 5, Cinsiyet.Disi);
+simulasyon.HayvanEkle(HayvanTuru.Kurt, 5, Cinsiyet.Erkek);
+simulasyon.HayvanEkle(HayvanTuru.Aslan, 4, Cinsiyet.Erkek);
+simulasyon.HayvanEkle(HayvanTuru.Aslan, 4, Cinsiyet.Disi);
+
 // avcıyı ekle
 simulasyon.AvciEkle();
 

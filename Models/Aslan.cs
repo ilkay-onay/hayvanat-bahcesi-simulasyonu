@@ -1,4 +1,3 @@
-// aslan sınıfını tanımlar.
 using System;
 using System.Linq;
 using HayvanatBahcesiSimulasyonu.Enums;
@@ -8,12 +7,13 @@ namespace HayvanatBahcesiSimulasyonu.Models
 {
     public class Aslan : Hayvan, IEtcil
     {
-        public override int AvlanmaMenzili => 5; // aslanın avlanma menzilini belirtir.
+        public override int HareketMenzili => 4;
+        public override int AvlanmaMenzili => 5;
 
-        public Aslan(Cinsiyet cinsiyet, int hareketMenzili, int gridBoyutu, Random random)
-            : base("Aslan", cinsiyet, hareketMenzili, gridBoyutu, random) { }
+        public Aslan(Cinsiyet cinsiyet, int gridBoyutu, Random random)
+            : base(HayvanTuru.Aslan, cinsiyet, gridBoyutu, random) { }
 
-        public IHayvan? Avla(IGrid grid) // aslanın avlanma mantığını uygular.
+        public IHayvan? Avla(IGrid grid)
         {
             var yakinHayvanlar = grid.YakinHayvanlariGetir(this, AvlanmaMenzili);
             var avlanabilirler = yakinHayvanlar.Where(h => h is IAslanSaldırabilir).ToList();

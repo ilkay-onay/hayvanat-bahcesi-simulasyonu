@@ -1,4 +1,3 @@
-// kurt sınıfını tanımlar.
 using System;
 using System.Linq;
 using HayvanatBahcesiSimulasyonu.Enums;
@@ -8,12 +7,13 @@ namespace HayvanatBahcesiSimulasyonu.Models
 {
     public class Kurt : Hayvan, IEtcil
     {
-        public override int AvlanmaMenzili => 4; // kurtun avlanma menzilini belirtir.
+        public override int HareketMenzili => 3;
+        public override int AvlanmaMenzili => 4;
 
-        public Kurt(Cinsiyet cinsiyet, int hareketMenzili, int gridBoyutu, Random random)
-            : base("Kurt", cinsiyet, hareketMenzili, gridBoyutu, random) { }
+        public Kurt(Cinsiyet cinsiyet, int gridBoyutu, Random random)
+            : base(HayvanTuru.Kurt, cinsiyet, gridBoyutu, random) { }
 
-        public IHayvan? Avla(IGrid grid) // kurtun avlanma mantığını uygular.
+        public IHayvan? Avla(IGrid grid)
         {
             var yakinHayvanlar = grid.YakinHayvanlariGetir(this, AvlanmaMenzili);
             var avlanabilirler = yakinHayvanlar.Where(h => h is IKurtSaldırabilir).ToList();

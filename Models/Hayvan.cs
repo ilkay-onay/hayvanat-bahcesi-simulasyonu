@@ -1,29 +1,25 @@
-// hayvanların temel özelliklerini ve davranışlarını içerir.
-// tüm hayvan türleri bu sınıftan türetilir.
+// hayvan sınıfı, hayvanların temel özelliklerini ve davranışlarını tanımlar.
+
+using HayvanatBahcesiSimulasyonu.Enums;
+using HayvanatBahcesiSimulasyonu.Interface;
 
 namespace HayvanatBahcesiSimulasyonu.Models
 {
     public abstract class Hayvan : IHayvan
     {
-        public string Tur { get; } // hayvan türü
-        public string Cinsiyet { get; } // hayvan cinsiyeti
-        public int X { get; private set; } // x koordinatı
-        public int Y { get; private set; } // y koordinatı
-        public int HareketMenzili { get; } // hareket menzili
-        public virtual int AvlanmaMenzili => 0; // varsayılan avlanma menzili (otçullar için)
+        public HayvanTuru Tur { get; protected set; }
+        public Cinsiyet Cinsiyet { get; protected set; }
+        public int X { get; private set; }
+        public int Y { get; private set; }
+        public abstract int HareketMenzili { get; }
+        public virtual int AvlanmaMenzili => 0;
+        string IHayvan.Tur => Tur.ToString();
 
-        protected Hayvan(
-            string tur,
-            string cinsiyet,
-            int hareketMenzili,
-            int gridBoyutu,
-            Random random
-        )
+        protected Hayvan(HayvanTuru tur, Cinsiyet cinsiyet, int gridBoyutu, Random random)
         {
             Tur = tur;
-            Cinsiyet = cinsiyet ?? "Yok";
-            HareketMenzili = hareketMenzili;
-            KonumBelirle(gridBoyutu, random); // rastgele konum belirle
+            Cinsiyet = cinsiyet;
+            KonumBelirle(gridBoyutu, random);
         }
 
         private void KonumBelirle(int gridBoyutu, Random random)
@@ -40,16 +36,16 @@ namespace HayvanatBahcesiSimulasyonu.Models
                 X + random.Next(-HareketMenzili, HareketMenzili + 1),
                 0,
                 grid.GridBoyutu - 1
-            ); // yeni x koordinatı
+            );
             Y = Math.Clamp(
                 Y + random.Next(-HareketMenzili, HareketMenzili + 1),
                 0,
                 grid.GridBoyutu - 1
-            ); // yeni y koordinatı
-            grid.HayvanKonumGuncelle(this, eskiX, eskiY); // konumu güncelle
+            );
+            grid.HayvanKonumGuncelle(this, eskiX, eskiY);
         }
 
         public double UzaklikHesapla(IHayvan diger) =>
-            Math.Sqrt(Math.Pow(X - diger.X, 2) + Math.Pow(Y - diger.Y, 2)); // iki hayvan arasındaki mesafeyi hesapla
+            Math.Sqrt(Math.Pow(X - diger.X, 2) + Math.Pow(Y - diger.Y, 2));
     }
 }
